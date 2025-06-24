@@ -22,47 +22,102 @@ I Gede Bagus Saka Sinatrya| 5027241088
 
 ## Deskripsi Soal
 
-> Insert testcase... (contoh dibawah) // hapus line ini
+**Tempat Sampah Gebang** adalah sistem file berbasis FUSE yang mengimplementasikan fitur "recycle bin" seperti pada OS modern.  
+Saat pengguna menghapus (unlink) file, file **tidak langsung dihapus permanen**, melainkan dipindahkan ke folder tersembunyi `.trash` yang terletak di direktori `$HOME`.
 
-Memahami race condition pada operasi check-then-act. Program membuat 2 thread; tiap thread mencoba mengambil satu-satunya sumber daya yang tersedia dari variabel global stok (nilai awal 1). Jika tanpa mutex, kedua thread bisa lolos pengecekan dan sama-sama mengambil sumber daya, menghasilkan nilai akhir stok menjadi -1.
+---
 
 ### Catatan
-
-> Insert catatan dari pengerjaan kalian... (contoh dibawah) // hapus line ini
 
 Struktur repository:
 ```
 .
-..
+├── makefile
+├── mnt
+├── real                        
+│   └── recycle_fs_origin.c     
+└── recycle_fs 
 ```
 
 ## Pengerjaan
-
-> Insert poin soal...
+### 1. Implementasi Tempat Sampah
 
 **Teori**
+FUSE (Filesystem in Userspace) memungkinkan user-space program untuk menyediakan sistem berkas virtual.
+Saat fungsi `unlink()` dipanggil, secara default file akan dihapus dari sistem. Namun pada proyek ini, operasi unlink di-override agar file hanya dipindahkan ke `.trash`.
 
-...
+Konsep yang digunakan:
+
+- Intercept System Call: `unlink` di-override agar tidak menghapus file secara permanen.
+
+- Redirection with Timestamp: File dipindah ke folder `.trash` dengan penambahan timestamp agar tidak bentrok nama.
+
+- Environment Variable `$HOME`: Folder `.trash` disimpan sesuai direktori pengguna yang sedang aktif.
+
 
 **Solusi**
 
-...
+Modifikasi dilakukan pada fungsi:
 
-> Insert poin soal...
+```c
+static int command_unlink(const char *path)
+```
+Langkah-langkahnya:
+
+Mengambil path file yang akan dihapus.
+
+Membuat folder `~/.trash` jika belum ada.
+
+Mengambil nama file asli, lalu menambahkan timestamp (YYYYMMDDHHMMSS).
+
+File dipindahkan `(rename())` ke folder `.trash`.
+
+Contoh hasil:
+
+```bash
+/real/data.txt   →   ~/.trash/data.txt_20250625024030
+```
+Jika terjadi error saat memindahkan, error tersebut akan ditangani dan dilaporkan.
+
+### 2. Operasi Dasar File System
 
 **Teori**
 
-...
+Beberapa fungsi penting yang harus diimplementasikan dalam filesystem berbasis FUSE:
+
+- `getattr` → Mendapatkan metadata file (ukuran, hak akses, dsb).
+- `readdir` → Membaca isi direktori.
+- `read`, `write`, `open`, `create` → Operasi file dasar.
+- `unlink` → Penghapusan (dimodifikasi jadi pindah ke `.trash`).
+- `ioctl` → Fitur tambahan untuk restore file (belum sempurna dan belum bisa berjalan).
 
 **Solusi**
 
-...
+Seluruh operasi dasar diimplementasikan di file `recycle_fs_origin.c`.
+Fungsi `fullpath()` digunakan sebagai helper untuk menyatukan `real_root` dengan `path` relatif dari FUSE.
+
+### 3. Restore (belum sempurna dan belum bisa berjalan)
+**Teori**
+
+Untuk mengembalikan file yang sudah masuk ke `.trash`, digunakan sistem `ioctl` dengan kode unik `(0x12345678)`. Fungsi ini menangani permintaan restore dari `.trash` ke direktori `real`.
+
+**Solusi**
+
+```c
+static int command_ioctl(...) {
+    if (cmd == 0x12345678) {
+        // Ambil path asal dan tujuan
+        // Pindahkan file dari ~/.trash ke direktori real
+    }
+}
+```
 
 **Video Menjalankan Program**
 ...
 
 ## Daftar Pustaka
 
-Sitasi 1
-Sitasi 2
-Sitasi 3
+- https://libfuse.github.io/doxygen/index.html
+- https://man7.org/linux/man-pages/man2/rename.2.html
+- https://linux.die.net/man/3/getenv
+- Dokumentasi FUSE dan slides praktikum resmi dari modul SISOP ITS

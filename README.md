@@ -16,10 +16,9 @@
 
 Nama | NRP
 --- | ---
-... | 5027241xxx
-... | 5027241xxx
-... | 5027241xxx
-... | 5027241xxx
+Yuan Banny Albyan| 5027241027
+Nisrina Bilqis | 5027241054
+I Gede Bagus Saka Sinatrya| 5027241088
 
 ## Deskripsi Soal
 

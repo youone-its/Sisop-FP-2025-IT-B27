@@ -113,7 +113,8 @@ static int command_ioctl(...) {
 ```
 
 **Video Menjalankan Program**
-...
+
+https://github.com/user-attachments/assets/7258e1eb-8634-483d-a73d-f48c2f486f5f
 
 ## Daftar Pustaka
 

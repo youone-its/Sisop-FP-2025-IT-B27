@@ -105,4 +105,4 @@ https://github.com/user-attachments/assets/7258e1eb-8634-483d-a73d-f48c2f486f5f
 - https://libfuse.github.io/doxygen/index.html
 - https://man7.org/linux/man-pages/man2/rename.2.html
 - https://linux.die.net/man/3/getenv
-- Dokumentasi FUSE dan slides praktikum resmi dari modul SISOP ITS
+- 

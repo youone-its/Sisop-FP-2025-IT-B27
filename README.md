@@ -79,6 +79,7 @@ Jika terjadi error saat memindahkan, error tersebut akan ditangani dan dilaporka
 ### 2. Operasi Dasar File System
 
 **Teori**
+
 Di FUSE (Filesystem in Userspace) setiap sistem operasi berkas ditentukan oleh serangkaian callback yang “menggantikan” panggilan sistem (sys-call) POSIX. Konsepnya: ketika aplikasi di ruang user menjalankan open(), read(), unlink(), dan sebagainya pada direktori mount-point, kernel FUSE akan meneruskan permintaan itu ke proses Anda melalui fungsi-fungsi di bawah ini
 
 Beberapa fungsi penting yang harus diimplementasikan dalam filesystem berbasis FUSE:

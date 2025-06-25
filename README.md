@@ -89,28 +89,12 @@ Beberapa fungsi penting yang harus diimplementasikan dalam filesystem berbasis F
 - `readdir` → Membaca isi direktori.
 - `read`, `write`, `open`, `create` → Operasi file dasar.
 - `unlink` → Penghapusan (dimodifikasi jadi pindah ke `.trash`).
-- `ioctl` → Fitur tambahan untuk restore file (belum sempurna dan belum bisa berjalan).
 
 **Solusi**
 
 Seluruh operasi dasar diimplementasikan di file `recycle_fs_origin.c`.
 Fungsi `fullpath()` digunakan sebagai helper untuk menyatukan `real_root` dengan `path` relatif dari FUSE.
 
-### 3. Restore (belum sempurna dan belum bisa berjalan)
-**Teori**
-
-Untuk mengembalikan file yang sudah masuk ke `.trash`, digunakan sistem `ioctl` dengan kode unik `(0x12345678)`. Fungsi ini menangani permintaan restore dari `.trash` ke direktori `real`.
-
-**Solusi**
-
-```c
-static int command_ioctl(...) {
-    if (cmd == 0x12345678) {
-        // Ambil path asal dan tujuan
-        // Pindahkan file dari ~/.trash ke direktori real
-    }
-}
-```
 
 **Video Menjalankan Program**
 

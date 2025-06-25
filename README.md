@@ -64,13 +64,10 @@ static int command_unlink(const char *path)
 ```
 Langkah-langkahnya:
 
-Mengambil path file yang akan dihapus.
-
-Membuat folder `~/.trash` jika belum ada.
-
-Mengambil nama file asli, lalu menambahkan timestamp (YYYYMMDDHHMMSS).
-
-File dipindahkan `(rename())` ke folder `.trash`.
+- Mengambil path file yang akan dihapus.
+- Membuat folder `~/.trash` jika belum ada.
+- Mengambil nama file asli, lalu menambahkan timestamp (YYYYMMDDHHMMSS).
+- File dipindahkan `(rename())` ke folder `.trash`.
 
 Contoh hasil:
 
@@ -105,4 +102,3 @@ https://github.com/user-attachments/assets/7258e1eb-8634-483d-a73d-f48c2f486f5f
 - https://libfuse.github.io/doxygen/index.html
 - https://man7.org/linux/man-pages/man2/rename.2.html
 - https://linux.die.net/man/3/getenv
-- 

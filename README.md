@@ -79,6 +79,7 @@ Jika terjadi error saat memindahkan, error tersebut akan ditangani dan dilaporka
 ### 2. Operasi Dasar File System
 
 **Teori**
+Di FUSE (Filesystem in Userspace) setiap sistem operasi berkas ditentukan oleh serangkaian callback yang “menggantikan” panggilan sistem (sys-call) POSIX. Konsepnya: ketika aplikasi di ruang user menjalankan open(), read(), unlink(), dan sebagainya pada direktori mount-point, kernel FUSE akan meneruskan permintaan itu ke proses Anda melalui fungsi-fungsi di bawah ini
 
 Beberapa fungsi penting yang harus diimplementasikan dalam filesystem berbasis FUSE:
 
@@ -99,6 +100,7 @@ https://github.com/user-attachments/assets/7258e1eb-8634-483d-a73d-f48c2f486f5f
 
 ## Daftar Pustaka
 
-- https://libfuse.github.io/doxygen/index.html
-- https://man7.org/linux/man-pages/man2/rename.2.html
-- https://linux.die.net/man/3/getenv
+- Sundararaman, S., Visampalli, L., Arpaci-Dusseau, A. C., & Arpaci-Dusseau, R. H. (2011). Refuse to Crash with Re-FUSE. EuroSys 2011. PDF: https://eurosys2011.cs.uni-salzburg.at/pdf/eurosys2011-sundararaman.pdf
+- libfuse API Documentation. https://libfuse.github.io/doxygen/index.html
+- Linux Programmer’s Manual: rename(2). https://man7.org/linux/man-pages/man2/rename.2.html
+- Linux Programmer’s Manual: getenv(3). https://linux.die.net/man/3/getenv

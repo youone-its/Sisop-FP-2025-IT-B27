@@ -43,12 +43,11 @@ Struktur repository:
 ### 1. Implementasi Tempat Sampah
 
 **Teori**
-FUSE (Filesystem in Userspace) memungkinkan user-space program untuk menyediakan sistem berkas virtual.
-Saat fungsi `unlink()` dipanggil, secara default file akan dihapus dari sistem. Namun pada proyek ini, operasi unlink di-override agar file hanya dipindahkan ke `.trash`.
+FUSE (Filesystem in Userspace) memungkinkan user-space program untuk menyediakan sistem berkas virtual. Kerangka kerja Direct-FUSE mendukung beberapa FUSE dan sistem berkas tingkat pengguna kustom di ruang pengguna tanpa memerlukan modul kernel, meningkatkan kinerja rata-rata sebesar 11,9% tanpa overhead yang signifikan (Moody 2018). Saat fungsi `unlink()` dipanggil, secara default file akan dihapus dari sistem. Namun pada proyek ini, operasi unlink di-override agar file hanya dipindahkan ke `.trash`.
 
 Konsep yang digunakan:
 
-- Intercept System Call: `unlink` di-override agar tidak menghapus file secara permanen.
+- Intercept System Call: Ekstensi berfungsi sepenuhnya di tingkat pengguna dan diinstal tanpa bantuan administrator sistem (Ibel 1998). Adanya fungsi `unlink` di-override agar tidak menghapus file secara permanen. 
 
 - Redirection with Timestamp: File dipindah ke folder `.trash` dengan penambahan timestamp agar tidak bentrok nama.
 
@@ -80,7 +79,7 @@ Jika terjadi error saat memindahkan, error tersebut akan ditangani dan dilaporka
 
 **Teori**
 
-Di FUSE (Filesystem in Userspace) setiap sistem operasi berkas ditentukan oleh serangkaian callback yang “menggantikan” panggilan sistem (sys-call) POSIX. Konsepnya: ketika aplikasi di ruang user menjalankan open(), read(), unlink(), dan sebagainya pada direktori mount-point, kernel FUSE akan meneruskan permintaan itu ke proses Anda melalui fungsi-fungsi di bawah ini
+Di FUSE (Filesystem in Userspace) setiap sistem operasi berkas ditentukan oleh serangkaian callback yang “menggantikan” panggilan sistem (sys-call) POSIX. Konsepnya: ketika aplikasi di ruang user menjalankan open(), read(), unlink(), dan sebagainya pada direktori mount-point. Basis data automount berisi informasi tentang titik mount sistem berkas yang akan dipetakan oleh automounter (Bannister 2015). Kemudian kernel FUSE akan meneruskan permintaan itu ke proses Anda melalui fungsi-fungsi di bawah ini
 
 Beberapa fungsi penting yang harus diimplementasikan dalam filesystem berbasis FUSE:
 
@@ -101,7 +100,6 @@ https://github.com/user-attachments/assets/7258e1eb-8634-483d-a73d-f48c2f486f5f
 
 ## Daftar Pustaka
 
-- Sundararaman, S., Visampalli, L., Arpaci-Dusseau, A. C., & Arpaci-Dusseau, R. H. (2011). Refuse to Crash with Re-FUSE. EuroSys 2011. PDF: https://eurosys2011.cs.uni-salzburg.at/pdf/eurosys2011-sundararaman.pdf
-- libfuse API Documentation. https://libfuse.github.io/doxygen/index.html
-- Linux Programmer’s Manual: rename(2). https://man7.org/linux/man-pages/man2/rename.2.html
-- Linux Programmer’s Manual: getenv(3). https://linux.die.net/man/3/getenv
+- Ibel, M., Alexandrov, A., Scheiman, C., & Schauser, K. (1998). UFO. ACM Transactions on Computer Systems (TOCS), 16, 207 - 233. https://doi.org/10.1145/290409.290410.
+- Moody, A., Yu, W., Zhu, Y., Wang, T., Mohror, K., Sato, K., & Khan, M. (2018). Direct-FUSE: Removing the Middleman for High-Performance FUSE File System Support. Proceedings of the 8th International Workshop on Runtime and Operating Systems for Supercomputers. https://doi.org/10.1145/3217189.321719
+- Bannister, M. (2015). Directory-Based Information Services: Automounter. 
